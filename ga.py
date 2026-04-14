@@ -30,7 +30,7 @@ COUNT = 0
 cache = {} # Caches the average fitness of each chromsome to prevent excessive training (chromosome -> fitness)
 
 # Fitness function
-def fitness(c: tuple):
+def fitness(c: tuple) -> float:
     global COUNT
     # Check cache for fitness and return it if it exists
     if cache.get(c) is not None:
@@ -49,7 +49,7 @@ def fitness(c: tuple):
     return fit
 
 # Mutation method
-def mutation(chromosome):
+def mutation(chromosome: tuple[int]) -> tuple:
     # Create a copy of the chromosome
     mutated = list(chromosome)
 
@@ -61,17 +61,18 @@ def mutation(chromosome):
     return tuple(mutated) # Return the mutated chromosome
 
 # Crossover Method
-def crossover(p1, p2):
+def crossover(p1: tuple[int], p2: tuple[int]) -> list[tuple]:
     split = random.randint(1, CHROMOSOME_LENGTH - 2) # Point to split on
     c1 = p1[:split] + p2[split:] # Child 1 
     c2 = p2[:split] + p1[split:] # Child 2
     return [c1, c2] # Return the two child chromosomes
 
-def tournament_selection(pops):
-    # Intake a list of k chromosomes with their fitnesses attached
+# Intake a list of k chromosomes with their fitnesses attached
+def tournament_selection(pops: list[tuple]) -> tuple:
     pops.sort(key=lambda x: x[1], reverse=True) # Sort by fitness
     return pops[0][0] # Return the chromosome with the highest fitness
 
+# Generate a random chromosome
 def gen_chromosome() -> tuple:
     c = [0] * CHROMOSOME_LENGTH
     for i in range(CHROMOSOME_LENGTH):
@@ -79,6 +80,7 @@ def gen_chromosome() -> tuple:
             c[i] = 1
     return tuple(c)
 
+# Get the time taken to run the classifier on a chromosome
 def get_time(chromosome) -> float:
     start = time.time()
     CLASSIFIER(chromosome)
@@ -93,7 +95,7 @@ for _ in range(POPULATION_SIZE):
 best_fits = [] # For plotting the best fitness of each gen
 g_hold = [] # For plotting the gen nums
 
-# Run generations
+# Run generations (Main GA loop)
 for g in range(GENERATIONS):
     COUNT = 0
     print(f"Generation {g+1}/{GENERATIONS}")

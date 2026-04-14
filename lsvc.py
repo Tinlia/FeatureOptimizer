@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score
 from getdata import get
 
 # LSVC Classifier. alpha isn't used in the current fitness function, but see the note at the end on its importance
-def evaluate_lsvc(chromosome, alpha=None) -> float:
+def evaluate_lsvc(chromosome: tuple[int], alpha=None) -> float:
     data = get()
     X = np.array([row[:-1] for row in data], dtype=float) # NOTE: Assuming all features are numeric 
     y = np.array([row[-1] for row in data])               # NOTE: Assuming last column is the label

@@ -38,6 +38,7 @@ def evaluate_knn(c: tuple, r: int, k: int) -> float:
 
 # Run the knn a few times to get the average acc and let that be the fitness
 def avg_accuracy_knn(c: tuple, runs=1, k=5) -> float:
+    global RANDOM
     # A note for why this exists, what with the knn being entirely deterministic in its current state:
     #  this is kept here so that if you want to add stochasticity to the knn (i.e., setting `random_state` in the t:t split to the run num)
     #  you can still test the avg accuracy without having to readd the avg accuracy function and refactor everything in ga.py.

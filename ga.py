@@ -1,27 +1,28 @@
 # The Genetic Algorithm for creating chromosomes for feature selection
-import random
-from getdata import load
+import random, time
+from getdata import load, feature_count
 from rfc import avg_accuracy_rfc
 from knn import avg_accuracy_knn
 import matplotlib.pyplot as plt
-import time
 
 # Load Dataset
 load()
 print("Dataset loaded successfully")
 
-# Hyperparameters
-CLASSIFIER = avg_accuracy_rfc # avg_accuracy_knn or avg_accuracy_rfc
-FITNESS_REQ = 1.07           # The percentage increase in fitness required to accept a result (Default 5%)
-CHROMOSOME_LENGTH = 8
+# Classifier Hyperparameters
+CLASSIFIER = avg_accuracy_knn       # avg_accuracy_knn or avg_accuracy_rfc
+FITNESS_REQ = 1.05                  # The percentage increase in fitness required to accept a result (Default 5%)
+CHROMOSOME_LENGTH = feature_count() # Number of features in the dataset, determines chromosome length
+
+# GA Hyperparameters
 POPULATION_SIZE = 30 
 MUTATION_RATE = 0.2
-CROSSOVER_RATE = 0.7
+CROSSOVER_RATE = 0.8
 ELITISM_RATE = 0.1
 DIVERSITY_RATE = 0.1
 GENERATIONS = 500 
 TOURNAMENT_SIZE = 4
-MAX_FITNESS = CLASSIFIER((1, 1, 1, 1, 1, 1, 1, 1), runs=3) * FITNESS_REQ # If a solution is n% better than the avg fitness of the chromosome with all features, accept it
+MAX_FITNESS = CLASSIFIER((1,) * CHROMOSOME_LENGTH, runs=3) * FITNESS_REQ # If a solution is n% better than the avg fitness of the chromosome with all features, accept it
 COUNT = 0 
 
 # Storage
@@ -35,9 +36,10 @@ def fitness(c: tuple):
         return cache[c]
     
     # Punish for 8&0 features
-    if sum(c) == 8 or sum(c) == 0: # If all or none of the features are selected, punish heavily
+    if sum(c) == CHROMOSOME_LENGTH or sum(c) == 0: # If all or none of the features are selected, punish heavily
         return 0
     COUNT += 1
+
     # Else, run it thrice and take the average
     fit = CLASSIFIER(c, runs=3)
 
@@ -59,7 +61,7 @@ def mutation(chromosome):
 
 # Crossover Method
 def crossover(p1, p2):
-    split = random.randint(1, CHROMOSOME_LENGTH - 1) # Point to split on
+    split = random.randint(1, CHROMOSOME_LENGTH - 2) # Point to split on
     c1 = p1[:split] + p2[split:] # Child 1 
     c2 = p2[:split] + p1[split:] # Child 2
     return [c1, c2] # Return the two child chromosomes
@@ -153,16 +155,16 @@ plt.legend()
 plt.xlabel("Generation")
 plt.ylabel("Best Fitness")
 plt.title("Best Fitness of Each Generation")
-plt.savefig("outputs/plot.png")
+plt.savefig("output/plot.png")
 plt.show()
 
 # Compare best chromosome vs all features
-with open("outputs/comparison.txt", "w") as f:
+with open("output/comparison.txt", "w") as f:
     c = pop[0][0]
     cfit = pop[0][1]
     ctime = get_time(c)
 
-    all_c = (1, 1, 1, 1, 1, 1, 1, 1)
+    all_c = (1,) * CHROMOSOME_LENGTH
     all_fit = MAX_FITNESS / FITNESS_REQ
     all_time = get_time(all_c)
 

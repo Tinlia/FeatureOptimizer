@@ -6,13 +6,12 @@ load()
 
 CLASSIFIER = avg_accuracy_knn # avg_accuracy_knn or avg_accuracy_rfc
 
-start = time.time()
-print(f"{CLASSIFIER((1, 1, 1, 1, 1, 1, 1, 1), runs=10)*100:.2f}%") # THIS IS HUGE
-print(f"Classifier used: {CLASSIFIER.__name__}")
-end = time.time()
-print(f"8ft Time taken: {end - start} seconds\n")
+# Since the labels in the dataset are in column 0, we need to shift them to the end for the classifier to work properly
+data = get()
+for i in range(len(data)):
+    data[i] = data[i][1:] + [data[i][0]]
 
-start = time.time()
-print(f"{CLASSIFIER((0, 1, 0, 0, 0, 1, 0, 0), runs=10)*100:.2f}%") # THIS IS HUGE
-end = time.time()
-print(f"2ft Time taken: {end - start} seconds\n")
+with open("shifted_data.csv", "w") as f:
+    for row in data:
+        f.write(",".join(row) + "\n")
+

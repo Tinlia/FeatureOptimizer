@@ -36,3 +36,9 @@ def evaluate_lsvc(chromosome: tuple[int], alpha=None) -> float:
     # fitness = alpha * accuracy + (1 - alpha) * (1 - (num_selected_features / total_features))
     
     return fitness
+
+def avg_accuracy_lsvc(c: tuple, runs=1, alpha=None) -> float:
+    acc = 0
+    for r in range(runs):
+        acc += evaluate_lsvc(c, alpha)
+    return float(acc / runs)

@@ -3,7 +3,7 @@ import random, time
 from getdata import apply_mask, load, feature_count
 from rfc import avg_accuracy_rfc
 from knn import avg_accuracy_knn
-from lsvc import evaluate_lsvc
+from lsvc import avg_accuracy_lsvc
 import matplotlib.pyplot as plt
 
 # Load Dataset
@@ -11,8 +11,8 @@ load()
 print("Dataset loaded successfully")
 
 # Classifier Hyperparameters
-CLASSIFIER = avg_accuracy_knn       # avg_accuracy_knn or avg_accuracy_rfc
-FITNESS_REQ = 1.05                  # The percentage increase in fitness required to accept a result (Default 5%)
+CLASSIFIER = avg_accuracy_lsvc       # avg_accuracy_knn or avg_accuracy_rfc
+FITNESS_REQ = 1                  # The percentage increase in fitness required to accept a result (Default 5%)
 CHROMOSOME_LENGTH = feature_count() # Number of features in the dataset, determines chromosome length
 
 # GA Hyperparameters

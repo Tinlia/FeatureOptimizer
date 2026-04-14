@@ -1,8 +1,9 @@
 # The Genetic Algorithm for creating chromosomes for feature selection
 import random, time
-from getdata import load, feature_count
+from getdata import apply_mask, load, feature_count
 from rfc import avg_accuracy_rfc
 from knn import avg_accuracy_knn
+from lsvc import evaluate_lsvc
 import matplotlib.pyplot as plt
 
 # Load Dataset
@@ -175,3 +176,6 @@ with open("output/comparison.txt", "w") as f:
     f.write(f"Best Chromosome {str(c)}\n")
     f.write(f"\tModel Accuracy: {cfit * 100:.2f}% (+{(cfit - all_fit) * 100:.2f}%)\n")
     f.write(f"\tTime Taken: {ctime:.4f} seconds (-{abs(ctime - all_time):.4f}s)\n\n")
+
+# Save the masked dataset
+apply_mask(pop[0][0])

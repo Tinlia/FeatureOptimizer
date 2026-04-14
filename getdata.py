@@ -16,7 +16,7 @@ def feature_count() -> int:
 
 def apply_mask(c: tuple[int]) -> None:
     # Save the dataset with only the selected features (for testing purposes)
-    with open("data/reduced_data.csv", "w") as f:
+    with open("output/reduced_data.csv", "w") as f:
         header = [f"feature_{i}" for i in range(len(c)) if c[i] == 1] + ["label"]
         f.write(",".join(header) + "\n")
         for row in dataset:
